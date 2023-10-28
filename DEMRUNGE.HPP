@@ -1,7 +1,7 @@
 #ifndef DEMRUNGE_HPP
 #define DEMRUNGE_HPP
 
-#include "./DEMETHOD.HPP"
+#include "DEMETHOD.HPP"
 
 class DEMRunge : public DEMethod {
  private:

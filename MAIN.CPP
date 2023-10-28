@@ -1,5 +1,6 @@
 #include "DIFFEQU.HPP"
 #include "DEMRUNGE.HPP"
+#include "DEMADAMS.HPP"
 
 double equation(double x, double y,...) {
  return 0.25 * y * y + x * x;
@@ -29,7 +30,17 @@ int main() {
  printf("Runge-Kutt method results:\n");
  puts(resolves);
  delete [] resolves;
+ printf("Press any key to watch results, got with Adams method\n");
+ getch();
+ deMethod->slice(0, 4, &preX, &preY);
  delete deMethod;
+ DEMethod *demAdams = new DEMAdams(de, preX, preY);
+ demAdams->resolve();
+ resolves = demAdams->output();
+ printf("Adams method results:\n");
+ puts(resolves);
+ delete [] resolves;
+ delete demAdams;
  delete de;
  printf("Press any key to exit\n");
  getch();

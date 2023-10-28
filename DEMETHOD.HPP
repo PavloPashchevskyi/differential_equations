@@ -4,7 +4,7 @@
 #include <string.h>
 #include <conio.h>
 
-#include "./DIFFEQU.HPP"
+#include "DIFFEQU.HPP"
 
 class DEMethod {
  protected:
