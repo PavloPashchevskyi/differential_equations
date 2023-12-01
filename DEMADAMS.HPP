@@ -66,21 +66,16 @@ class DEMAdams : public DEMethod {
    delete [] Y;
    X = newXs;
    Y = newYs;
+   double deltaY, correctedDeltaY;
    for (i = DEMAdams::prevPointsQuantity; i < pointsQuantity; i++) {
     X[i] = differentialEquation->getXBegin() + i * differentialEquation->getXStep();
-    double deltaY = calculateDeltaY(i - 1);
+    deltaY = calculateDeltaY(i - 1);
     Y[i] = Y[i - 1] + deltaY;
-    double correctedDeltaY = correctDeltaY(i - 1, X[i], Y[i]);
+    correctedDeltaY = correctDeltaY(i - 1, X[i], Y[i]);
     Y[i] = Y[i - 1] + correctedDeltaY;
    }
   }
   ~DEMAdams() {
-   if (X != NULL) {
-    delete [] X;
-   }
-   if (Y != NULL) {
-    delete [] Y;
-   }
   }
 };
 

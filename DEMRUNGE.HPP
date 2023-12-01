@@ -58,12 +58,6 @@ class DEMRunge : public DEMethod {
    }
   }
   ~DEMRunge() {
-   if (X != NULL) {
-    delete [] X;
-   }
-   if (Y != NULL) {
-    delete [] Y;
-   }
   }
 };
 

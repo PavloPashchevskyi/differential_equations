@@ -4,8 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef double (*FUNCNARGSPTR)(double, double,...);
+#include "FUNCTYPE.H"
 
 class DiffEqu {
  private:

@@ -109,6 +109,8 @@ class DEMethod {
   virtual void resolve() = 0;
   virtual ~DEMethod() {
    delete differentialEquation;
+   delete [] X;
+   delete [] Y;
   };
 };
 

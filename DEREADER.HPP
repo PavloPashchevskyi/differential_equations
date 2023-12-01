@@ -52,44 +52,38 @@ double* convertDoublePointerToSingle(unsigned m, unsigned n, double **X) {
  return result;
 }
 
-double interpolateAbsent(
+void prepareToInterpolation(
  unsigned order,
  unsigned rowsQty,
  double *X,
  double *Y,
  double *results,
- double *x
+ unsigned *argumentsQuantity,
+ unsigned *argumentsValuesQuantity,
+ double **arguments,
+ double **R
  ) {
- unsigned argumentsQuantity = order + 1;
- unsigned argumentsValuesQuantity;
- double **Xs = new double*[argumentsQuantity];
- Xs[0] = convertXsArrayToSet(rowsQty, X, &argumentsValuesQuantity);
- for (unsigned i = 1; i < argumentsQuantity; i++) {
+ *argumentsQuantity = order + 1;
+ double **Xs = new double*[*argumentsQuantity];
+ Xs[0] = convertXsArrayToSet(rowsQty, X, argumentsValuesQuantity);
+ for (unsigned i = 1; i < *argumentsQuantity; i++) {
   Xs[i] = convertYsArrayToSet(rowsQty, Y);
  }
- double *arguments = convertDoublePointerToSingle(
-  argumentsQuantity,
-  argumentsValuesQuantity,
+ *arguments = convertDoublePointerToSingle(
+  *argumentsQuantity,
+  *argumentsValuesQuantity,
   Xs
  );
- double *R;
- R = new double[(unsigned) pow(argumentsValuesQuantity, argumentsQuantity)];
- for (i = 0; i < argumentsValuesQuantity; i++) {
-  for (unsigned j = 0; j < argumentsValuesQuantity; j++) {
-   *(R+i*argumentsValuesQuantity+j) = results[j*argumentsValuesQuantity+i];
+ *R = new double[(unsigned) pow(*argumentsValuesQuantity,*argumentsQuantity)];
+ for (i = 0; i < *argumentsValuesQuantity; i++) {
+  for (unsigned j = 0; j < *argumentsValuesQuantity; j++) {
+   *(*R+i**argumentsValuesQuantity+j) = results[j**argumentsValuesQuantity+i];
   }
  }
- for (i = 0; i < argumentsQuantity; i++) {
+ for (i = 0; i < *argumentsQuantity; i++) {
   delete [] Xs[i];
  }
  delete [] Xs;
- return IFUsage::apply(
-  argumentsQuantity,
-  argumentsValuesQuantity,
-  arguments,
-  R,
-  x
- );
 }
 
 double readDEResults(double x, double y,...) {
@@ -137,8 +131,13 @@ double readDEResults(double x, double y,...) {
   }
  }
  if (sn == -1) {
-  double variables[] = {x, y};
-  result = interpolateAbsent(order, rowsQuantity, X, Y, results, variables);
+  double *vars = &x;
+  unsigned aq, avq;
+  double *args, *R;
+  prepareToInterpolation(order,rowsQuantity,X,Y,results,&aq,&avq,&args,&R);
+  result = IFUsage::apply(aq, avq, args, R, vars);
+  delete [] R;
+  delete [] args;
  }
  delete [] results;
  delete [] Y;
