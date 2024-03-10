@@ -1,15 +1,18 @@
 #include "DIFFEQU.HPP"
 #include "DEMRUNGE.HPP"
 #include "DEMADAMS.HPP"
-
-double equation(double x, double y,...) {
- return 0.25 * y * y + x * x;
-}
+#include "DEEXEC.HPP"
+#include "DEREADER.HPP"
 
 int main() {
- unsigned order = 1;
+ unsigned order;
  double from, to, step, *initConditions, *preX, *preY;
+ char equationRightPart[128];
  clrscr();
+ do {
+  printf("Input an order of the highest derivative in equation: ");
+  scanf("%d", &order);
+ } while (order < 1);
  printf("Input band and step in format of <from to step>: ");
  scanf("%lf %lf %lf", &from, &to, &step);
  printf("Input initial conditions x0 y0 y10 y20 ... y(n-1)0: ");
@@ -22,8 +25,15 @@ int main() {
  for(i = 0; i < order + 1; i++) {
   printf("%f ", *(initConditions+i));
  }
+ Executor *dee = new DEExec(".\\", "deexecr", order);
+ printf("\nInput right part of differential equation:\n");
+ printf("y%d = ", order);
+ scanf("%s", &equationRightPart);
+ dee->setFormula(equationRightPart);
  printf("\nExecuting...\n");
- DiffEqu *de = new DiffEqu(equation, initConditions, from, to, step, order);
+ dee->execute(from, to, step, initConditions, order+1);
+ delete dee;
+ DiffEqu *de = new DiffEqu(readDEResults, initConditions, from, to, step, order);
  DEMethod *deMethod = new DEMRunge(de);
  deMethod->resolve();
  char *resolves = deMethod->output();
