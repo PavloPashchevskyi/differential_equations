@@ -7,12 +7,10 @@
 int main() {
  unsigned order;
  double from, to, step, *initConditions, *preX, *preY;
- char equationRightPart[128];
+ char equationRightPart[128], c;
  clrscr();
- do {
-  printf("Input an order of the highest derivative in equation: ");
-  scanf("%d", &order);
- } while (order < 1);
+ // TODO: resolve differential equations of the highest order
+ order = 1;
  printf("Input band and step in format of <from to step>: ");
  scanf("%lf %lf %lf", &from, &to, &step);
  printf("Input initial conditions x0 y0 y10 y20 ... y(n-1)0: ");
@@ -40,17 +38,22 @@ int main() {
  printf("Runge-Kutt method results:\n");
  puts(resolves);
  delete [] resolves;
- printf("Press any key to watch results, got with Adams method\n");
- getch();
- deMethod->slice(0, 4, &preX, &preY);
- delete deMethod;
- DEMethod *demAdams = new DEMAdams(de, preX, preY);
- demAdams->resolve();
- resolves = demAdams->output();
- printf("Adams method results:\n");
- puts(resolves);
- delete [] resolves;
- delete demAdams;
+ printf("Do you want to resolve this equation via Adams method (y/n) ? ");
+ c = getch();
+ printf("%c\n", c);
+ if (c == 'y' || c == 'Y') {
+  deMethod->slice(0, 4, &preX, &preY);
+  delete deMethod;
+  DEMethod *demAdams = new DEMAdams(de, preX, preY);
+  demAdams->resolve();
+  resolves = demAdams->output();
+  printf("Adams method results:\n");
+  puts(resolves);
+  delete [] resolves;
+  delete demAdams;
+ } else {
+  delete deMethod;
+ }
  delete de;
  printf("Press any key to exit\n");
  getch();
